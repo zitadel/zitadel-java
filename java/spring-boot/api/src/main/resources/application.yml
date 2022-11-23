@@ -1,0 +1,33 @@
+server:
+  port: 18090
+  servlet:
+    context-path: /
+  error:
+    include-stacktrace: never
+
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      # deals with single and multi-valued JWT claims
+      accept-single-value-as-array: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://issuer.zitadel.ch
+          jwk-set-uri: https://api.zitadel.ch/oauth/v2/keys
+        opaquetoken:
+          introspection-uri: https://api.zitadel.ch/oauth/v2/introspect
+          client-id: '<the-api-client-id>'
+          client-secret: '<the-api-client-secret>'
+
+logging:
+  level:
+    root: info
+    demo: debug
+    org:
+      springframework:
+        web: info
+        security: debug

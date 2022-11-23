@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments::head}">
+    <title>Account Console</title>
+</head>
+<body class="container">
+
+<div th:replace="~{fragments::navbar2(current=index)}"></div>
+
+<script defer>
+    async function greetme() {
+
+        let response = await fetch("/webapp/api/greetings/me", {credentials: 'include'});
+        let payload = await response.json();
+
+        console.log(payload);
+
+        document.querySelector("#message").innerText = payload.message;
+    }
+</script>
+
+<div class="jumbotron">
+
+    <div>
+        <h2>User Roles</h2>
+        <ol>
+            <li th:each="roleName, iterator: ${roleNames}" th:text="${roleName}">Role</li>
+        </ol>
+    </div>
+
+    <div>
+        <h2>Call Backend API</h2>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="#" role="button" onclick="greetme()">Greet me</a>
+        </p>
+    </div>
+
+    <p id="message" class=".alert-success">
+
+    </p>
+</div>
+
+</body>
+</html>
