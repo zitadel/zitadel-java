@@ -14,13 +14,12 @@ spring:
       client:
         provider:
           zitadel:
-            issuerUri: https://issuer.zitadel.ch
+            issuerUri: '<the-web-issuer>'
             user-name-attribute: preferred_username
         registration:
           zitadel:
             client-id: '<the-web-client-id>'
-            client-secret: '<the-web-client-secret>'
-            client-authentication-method: client_secret_post
+            client-authentication-method: none
             authorizationGrantType: authorization_code
             redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
             scope: ["openid", "profile"]

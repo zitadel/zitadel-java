@@ -1,43 +1,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{fragments::head}">
     <title>Account Console</title>
 </head>
+
 <body class="container">
 
-<div th:replace="~{fragments::navbar2(current=index)}"></div>
+    <div th:replace="~{fragments::navbar2(current=index)}"></div>
 
-<script defer>
-    async function greetme() {
+    <div class="jumbotron">
 
-        let response = await fetch("/webapp/api/greetings/me", {credentials: 'include'});
-        let payload = await response.json();
+        <div>
+            <h2>User Roles</h2>
+            <ol>
+                <li th:each="roleName, iterator: ${roleNames}" th:text="${roleName}">Role</li>
+            </ol>
+        </div>
 
-        console.log(payload);
+        <div>
+            <h2>Profile</h2>
+            <ul>
+                <li th:each="claims, iterator: ${userInfo.claims}" th:text="${claims}">Claim</li>
+            </ul>
+        </div>
 
-        document.querySelector("#message").innerText = payload.message;
-    }
-</script>
+        <div>
+            <h2>Tasks</h2>
+            <form class="form-horizontal" role="form" th:action="@{/}" method="GET">
+                <button type="submit" name="load" value="true" class="btn btn-primary">Update List</button>
+            </form>
+            <ul>
+                <li th:each="item, i : *{tasks}" th:text="${item}"></li>
+            </ul>
 
-<div class="jumbotron">
+            <form class="form-horizontal" role="form" th:action="@{/add}" method="POST">
+                <p class="lead">
+                    <input name="task" id="task" />
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </p>
+            </form>
+        </div>
 
-    <div>
-        <h2>User Roles</h2>
-        <ol>
-            <li th:each="roleName, iterator: ${roleNames}" th:text="${roleName}">Role</li>
-        </ol>
-    </div>
+        <p id="message" class=".alert-success">
 
-    <div>
-        <h2>Call Backend API</h2>
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="#" role="button" onclick="greetme()">Greet me</a>
         </p>
     </div>
 
-    <p id="message" class=".alert-success">
-
-    </p>
-</div>
-
 </body>
+
 </html>

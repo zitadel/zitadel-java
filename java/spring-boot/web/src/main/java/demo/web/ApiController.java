@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -20,11 +18,20 @@ class ApiController {
     @Qualifier("zitadel")
     private final RestTemplate restTemplate;
 
-    @GetMapping("/greetings/me")
+    @GetMapping("/tasks")
     Object greetme(Authentication auth) {
 
         log.debug("Calling backend API: begin");
-        var payload = restTemplate.getForObject("http://localhost:18090/api/greet/me", Map.class);
+        var payload = restTemplate.getForObject("http://localhost:18090/api/tasks", Object.class);
+        log.debug("Calling backend API: end");
+        return payload;
+    }
+
+    @GetMapping("/list")
+    Object list(Authentication auth) {
+
+        log.debug("Calling backend API: begin");
+        var payload = restTemplate.getForObject("http://localhost:18090/api/tasks", Object.class);
         log.debug("Calling backend API: end");
         return payload;
     }

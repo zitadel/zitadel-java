@@ -1,20 +1,32 @@
 package demo.app.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.security.web.SecurityFilterChain;
+
+import demo.app.support.zitadel.CustomAuthorityOpaqueTokenIntrospector;
 
 /**
  * Configuration applied on all web endpoints defined for this
  * application. Any configuration on specific resources is applied
  * in addition to these global rules.
  */
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity
 class WebSecurityConfig {
+
+    @Autowired
+    private OpaqueTokenIntrospector a;
 
     /**
      * Configures basic security handler per HTTP session.
@@ -32,22 +44,25 @@ class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf().disable();
-
-        http.sessionManagement(smc -> {
-            smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        });
-
-        http.authorizeRequests(arc -> {
-            // declarative route configuration
-            // .mvcMatchers("/api").hasAuthority("ROLE_ACCESS")
-            arc.mvcMatchers("/api/**").authenticated();
-            // add additional routes
-            arc.anyRequest().authenticated(); //
-        });
-        http.oauth2ResourceServer().opaqueToken();
+        http
+                .csrf().disable()
+                .sessionManagement(smc -> {
+                    smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                })
+                .authorizeRequests(arc -> {
+                    // declarative route configuration
+                    // .mvcMatchers("/api").hasAuthority("ROLE_ACCESS")
+                    arc.mvcMatchers("/api/greet/**").authenticated();
+                    // add additional routes
+                    arc.anyRequest().permitAll(); //
+                })
+                .oauth2ResourceServer().opaqueToken(a -> a.introspector(this.introspector()));
 
         return http.build();
+    }
+
+    private OpaqueTokenIntrospector introspector() {
+        return new CustomAuthorityOpaqueTokenIntrospector(a);
     }
 
 }

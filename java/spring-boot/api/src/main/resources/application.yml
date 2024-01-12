@@ -15,11 +15,8 @@ spring:
   security:
     oauth2:
       resourceserver:
-        jwt:
-          issuer-uri: https://issuer.zitadel.ch
-          jwk-set-uri: https://api.zitadel.ch/oauth/v2/keys
         opaquetoken:
-          introspection-uri: https://api.zitadel.ch/oauth/v2/introspect
+          introspection-uri: '<api-introspection-uri>'
           client-id: '<the-api-client-id>'
           client-secret: '<the-api-client-secret>'
 

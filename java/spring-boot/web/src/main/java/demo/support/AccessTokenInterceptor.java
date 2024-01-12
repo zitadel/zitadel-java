@@ -22,7 +22,7 @@ public class AccessTokenInterceptor implements ClientHttpRequestInterceptor {
         var accessToken = tokenAccessor.getAccessTokenForCurrentUser();
 
         if (accessToken != null) {
-            request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken.getTokenValue());
+            request.getHeaders().add(HttpHeaders.AUTHORIZATION, accessToken.getTokenType().getValue()+ " " + accessToken.getTokenValue());
         }
 
         return execution.execute(request, body);
