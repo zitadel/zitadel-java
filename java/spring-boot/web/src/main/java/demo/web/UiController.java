@@ -1,9 +1,6 @@
 package demo.web;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -13,11 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,32 +23,31 @@ class UiController {
     private final RestTemplate restTemplate;
 
     @GetMapping("/")
-    public String showIndex(Model model, Authentication auth, @RequestParam(required = false) boolean load) {
+    public String showIndex(Model model, Authentication auth) {
         var roleNames = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         model.addAttribute("roleNames", roleNames);
         var userInfo = ((DefaultOidcUser) auth.getPrincipal()).getUserInfo();
         model.addAttribute("userInfo", userInfo);
 
+        return "index";
+    }
+
+    @GetMapping("/tasks")
+    public String showTasks(Model model, Authentication auth, @RequestParam(required = false) boolean load) {
         if (load) {
             this.listTasks(model);
         }
 
-        return "index";
+        return "tasks";
     }
 
     @PostMapping("/add")
     public String addTask(Model model, Authentication auth, @RequestParam(required = true) String task) {
         log.debug("Calling backend API: begin");
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> httpEntity = new HttpEntity<>(task, headers);
-
-        restTemplate.postForLocation("http://localhost:18090/api/tasks", httpEntity);
+        restTemplate.postForLocation("http://localhost:18090/api/tasks", task);
         log.debug("Calling backend API: end");
 
-        return "redirect:/?load=true";
+        return "redirect:/tasks?load=true";
     }
 
     private void listTasks(Model model) {

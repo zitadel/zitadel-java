@@ -24,8 +24,6 @@ class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(arc -> {
-                    // declarative route configuration
-                    // add additional routes
                     arc.requestMatchers("/webjars/**", "/resources/**", "/css/**").permitAll();
                     arc.anyRequest().fullyAuthenticated();
                 })
@@ -43,9 +41,6 @@ class WebSecurityConfig {
     private LogoutSuccessHandler oidcLogoutSuccessHandler() {
         OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(
                 this.clientRegistrationRepository);
-
-        // Sets the location that the End-User's User Agent will be redirected to
-        // after the logout has been performed at the Provider
         oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}");
 
         return oidcLogoutSuccessHandler;

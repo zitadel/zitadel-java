@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments::head}">
+    <title>Tasks</title>
+</head>
+
+<body class="container">
+
+    <div th:replace="~{fragments::navbar2(current=tasks)}"></div>
+
+    <div class="jumbotron">
+
+        <div>
+            <h2>Tasks</h2>
+            <form class="form-horizontal" role="form" th:action="@{/tasks}" method="GET">
+                <button type="submit" name="load" value="true" class="btn btn-primary">Update List</button>
+            </form>
+            <ul>
+                <li th:each="item, i : *{tasks}" th:text="${item}"></li>
+            </ul>
+
+            <div sec:authorize="hasRole('admin')">
+                <form class="form-horizontal" role="form" th:action="@{/add}" method="POST">
+                    <p class="lead">
+                        <input name="task" id="task" autofocus />
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <p id="message" class=".alert-success">
+
+        </p>
+    </div>
+
+</body>
+
+</html>

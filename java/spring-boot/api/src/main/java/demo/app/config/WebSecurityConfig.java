@@ -19,7 +19,6 @@ import demo.app.support.zitadel.CustomAuthorityOpaqueTokenIntrospector;
  * application. Any configuration on specific resources is applied
  * in addition to these global rules.
  */
-@Slf4j
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
@@ -34,8 +33,8 @@ class WebSecurityConfig {
      * <ul>
      * <li>Stateless session (no session kept server-side)</li>
      * <li>CORS set up</li>
-     * <li>Require the role "ACCESS" for all api paths</li>
-     * <li>JWT converted into Spring token</li>
+     * <li>Require authentication for the /api/tasks paths</li>
+     * <li>access token converted into Spring token</li>
      * </ul>
      *
      * @param http security configuration
@@ -50,11 +49,8 @@ class WebSecurityConfig {
                     smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 .authorizeRequests(arc -> {
-                    // declarative route configuration
-                    // .mvcMatchers("/api").hasAuthority("ROLE_ACCESS")
-                    arc.mvcMatchers("/api/greet/**").authenticated();
-                    // add additional routes
-                    arc.anyRequest().permitAll(); //
+                    arc.mvcMatchers("/api/tasks").authenticated();
+                    arc.anyRequest().permitAll();
                 })
                 .oauth2ResourceServer().opaqueToken(a -> a.introspector(this.introspector()));
 

@@ -27,14 +27,17 @@ public class CustomAuthorityOpaqueTokenIntrospector implements OpaqueTokenIntros
     }
 
     private Collection<GrantedAuthority> extractAuthorities(OAuth2AuthenticatedPrincipal principal) {
-        HashMap<String, Object> claims = principal.getAttribute(ZITADEL_ROLES_CLAIM);
+        var authorities = new HashSet<GrantedAuthority>();
 
-        HashSet<GrantedAuthority> a = new HashSet<>();
+        HashMap<String, Object> claims = principal.getAttribute(ZITADEL_ROLES_CLAIM);
+        if (claims == null) {
+            return authorities;
+        }
 
         claims.keySet().forEach(role -> {
-            a.add(new SimpleGrantedAuthority("ROLE_" + role));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         });
 
-        return a;
+        return authorities;
     }
 }

@@ -33,7 +33,7 @@ class ExampleController {
     }
 
     @PostMapping(value = "/api/tasks", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_admin')")
+    @PreAuthorize("hasRole('admin')")
     Object addTask(@RequestBody String task, HttpServletResponse response) {
         if (task.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "task must not be empty");
