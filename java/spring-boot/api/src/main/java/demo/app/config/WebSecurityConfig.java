@@ -1,8 +1,6 @@
 package demo.app.config;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +23,7 @@ import demo.app.support.zitadel.CustomAuthorityOpaqueTokenIntrospector;
 class WebSecurityConfig {
 
     @Autowired
-    private OpaqueTokenIntrospector a;
+    private OpaqueTokenIntrospector introspector;
 
     /**
      * Configures basic security handler per HTTP session.
@@ -44,21 +42,21 @@ class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf().disable()
+                .csrf(c -> c.disable())
                 .sessionManagement(smc -> {
                     smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
-                .authorizeRequests(arc -> {
-                    arc.mvcMatchers("/api/tasks").authenticated();
+                .authorizeHttpRequests(arc -> {
+                    arc.requestMatchers("/api/tasks").authenticated();
                     arc.anyRequest().permitAll();
                 })
-                .oauth2ResourceServer().opaqueToken(a -> a.introspector(this.introspector()));
+                .oauth2ResourceServer(rs -> rs.opaqueToken(a -> a.introspector(this.introspector())));
 
         return http.build();
     }
 
     private OpaqueTokenIntrospector introspector() {
-        return new CustomAuthorityOpaqueTokenIntrospector(a);
+        return new CustomAuthorityOpaqueTokenIntrospector(introspector);
     }
 
 }

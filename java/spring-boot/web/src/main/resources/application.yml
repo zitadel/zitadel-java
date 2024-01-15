@@ -13,7 +13,7 @@ spring:
       client:
         provider:
           zitadel:
-            issuerUri: '<the-web-issuer>'
+            issuer-uri: '<the-web-issuer>'
             user-name-attribute: preferred_username
         registration:
           zitadel:

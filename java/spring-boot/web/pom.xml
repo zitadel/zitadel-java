@@ -8,7 +8,7 @@
         <version>3.2.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.github.thomasdarimont.training</groupId>
+    <groupId>com.zitadel.spring.example</groupId>
     <artifactId>web</artifactId>
     <version>0.0.2-SNAPSHOT</version>
     <name>web</name>
