@@ -1,0 +1,25 @@
+{
+    "name": "zitadel-java-example",
+    "image": "mcr.microsoft.com/devcontainers/java:17",
+    "forwardPorts": [
+        18080,
+        18090
+    ],
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "17",
+            "installMaven": "true"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "vscjava.vscode-java-pack",
+                "vscjava.vscode-spring-initializr",
+                "vscjava.vscode-maven"
+            ]
+        }
+    },
+    "postCreateCommand": "mvn clean package -DskipTests"
+}

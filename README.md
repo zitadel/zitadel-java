@@ -1,6 +1,6 @@
 ## ZITADEL Example Project with Spring Boot and Spring Security
 
-This example contains two Spring Boot Apps (_api_ and _app_) which use the [ZITADEL](https://zitadel.ch/) SaaS identity provider as OpenID Provider.
+This example contains two Spring Boot Apps (_api_ and _app_) which use the [ZITADEL](https://zitadel.com/) SaaS identity provider as OpenID Provider.
 
 - The app _web_ uses the internal OAuth2 access token (opaque token) provided by ZITADEL to access the _api_.
 - The _api_ acts as an OAuth2 resource server.
@@ -14,6 +14,9 @@ This example contains two Spring Boot Apps (_api_ and _app_) which use the [ZITA
 
 # Applications
 
+To run the example you need to configure the applications in ZITADEL and provide the generated properties.
+Please check out the full guides ([web](https://zitadel.com/docs/examples/login/java-spring) and [api](https://zitadel.com/docs/examples/secure-api/java-spring)) on this example as well.
+
 ## API
 
 The Spring Boot app _api_ is configured as an API in ZITADEL and uses the Spring Security Resource Server support.
@@ -26,8 +29,16 @@ The Spring Boot app _web_ is configured as confidential Web App and OpenID Conne
 for authentication.
 
 Base URL: `http://localhost:18080/webapp`
-Redirect URL: `http://localhost:18080/webapp/login/oauth2/code/zitadel`
-Post Logout URL: `http://localhost:18080/webapp`
+
+Redirect URI:
+```
+http://localhost:18080/webapp/login/oauth2/code/zitadel
+```
+
+Post Logout URL:
+```
+http://localhost:18080/webapp
+```
 
 # Build
 
@@ -35,57 +46,28 @@ Post Logout URL: `http://localhost:18080/webapp`
 mvn clean package -DskipTests
 ```
 
-# Configuration
-
-Before you can run your applications _api_ and _web_, you need a client ID and a client secret from ZITADEL, respectively.
-
-## ZITADEL
-
-![Client Configurations](/java/spring-boot/spring-boot-zitadel-config.png)
-
-![API App Configurations](/java/spring-boot/spring-boot-zitadel-config-api-app.png)
-
-![Web App Configurations](/java/spring-boot/spring-boot-zitadel-config-web-app2.png)
-
-## Spring
-
-The _api_ application requires the following JVM Properties to be configured:
-
-```
--Dspring.security.oauth2.resourceserver.opaquetoken.client-id=...api-client-id
--Dspring.security.oauth2.resourceserver.opaquetoken.client-secret=...api-client-secret
-```
-
-The _web_ application requires the following JVM Properties to be configured:
-
-```
--Dspring.security.oauth2.client.registration.zitadel.client-id=...web-client-id
--Dspring.security.oauth2.client.registration.zitadel.client-secret=...web-client-secret
-```
-
 # Run
 
+The _api_ application requires the following JVM Properties to be configured:
 ```bash
 # Run the api application in one terminal
 java \
-  -Dspring.security.oauth2.resourceserver.opaquetoken.client-id=<see configuration below> \
-  -Dspring.security.oauth2.resourceserver.opaquetoken.client-secret=<see configuration below> \
-  -jar api/target/api-0.0.1-SNAPSHOT.jar
+  -Dspring.security.oauth2.resourceserver.opaquetoken.introspection-uri=<see configuration above> \
+  -Dspring.security.oauth2.resourceserver.opaquetoken.client-id=<see configuration above> \
+  -Dspring.security.oauth2.resourceserver.opaquetoken.client-secret=<see configuration above> \
+  -jar api/target/api-0.0.2-SNAPSHOT.jar
 ```
 
+The _web_ application requires the following JVM Properties to be configured:
 ```bash
 # Run the web application in another terminal
 java \
-  -Dspring.security.oauth2.client.registration.zitadel.client-id=<see configuration below> \
-  -Dspring.security.oauth2.client.registration.zitadel.client-secret=<see configuration below> \
-  -jar web/target/web-0.0.1-SNAPSHOT.jar
+  -Dspring.security.oauth2.client.provider.zitadel.issuer-uri=<see configuration above> \
+  -Dspring.security.oauth2.client.registration.zitadel.client-id=<see configuration above> \
+  -jar web/target/web-0.0.2-SNAPSHOT.jar
 ```
 
 Open your browser and navigate to http://localhost:18080/webapp/
-
-# Demo
-
-![Demo](spring-boot-zitadel-demo.gif)
 
 # Misc
 

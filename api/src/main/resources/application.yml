@@ -1,0 +1,30 @@
+server:
+  port: 18090
+  servlet:
+    context-path: /
+  error:
+    include-stacktrace: never
+
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      # deals with single and multi-valued JWT claims
+      accept-single-value-as-array: true
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          introspection-uri: '<api-introspection-uri>'
+          client-id: '<the-api-client-id>'
+          client-secret: '<the-api-client-secret>'
+
+logging:
+  level:
+    root: info
+    demo: debug
+    org:
+      springframework:
+        web: info
+        security: debug
