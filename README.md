@@ -1,3 +1,7 @@
+> [\!WARNING]
+> This repository is archived and no longer maintained.
+> For the latest version and active development, please refer to [zitadel/example-auth-spring](https://github.com/zitadel/example-auth-spring).
+
 ## ZITADEL Example Project with Spring Boot and Spring Security
 
 This example contains two Spring Boot Apps (_api_ and _app_) which use the [ZITADEL](https://zitadel.com/) SaaS identity provider as OpenID Provider.
